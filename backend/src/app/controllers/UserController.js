@@ -20,13 +20,12 @@ class UserController {
         const schema = Yup.object().shape({
             name: Yup.string(),
             email: Yup.string().email(),
-            password: Yup.string().min(6),
             oldPassoword: Yup.string().min(6),
-            passoword: Yup.string().min(6).when('oldPassoword', (oldPassoword, field) => 
-                oldPassoword ? field.required() : field
+            password: Yup.string().min(6).when('oldPassword', (oldPassword, field) => 
+                oldPassword ? field.required() : field
             ),
-            confirmPassword: Yup.string().when('passoword', (passoword, field) => 
-                passoword ? field.required().oneOf([Yup.ref('passoword')]) : field
+            confirmPassword: Yup.string().when('passoword', (password, field) => 
+                password ? field.required().oneOf([Yup.ref('password')]) : field
             )
         });
         if (!(await schema.isValid(req.body))) 
