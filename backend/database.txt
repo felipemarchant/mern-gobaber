@@ -1,1 +1,2 @@
 docker run --name gobaber-database -e POSTGRES_PASSWORD=docker -p 5444:5432 -d postgres
+docker run --name gobaber-mongo -p 27077:27017 -d -t mongo

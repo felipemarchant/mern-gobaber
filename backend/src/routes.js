@@ -20,12 +20,14 @@ routes.post('/sessions', SessionController.store);
 routes.use(auth);
 
 routes.put('/users', auth, UserController.update);
-routes.post('/files', auth, upload.single('file'), FileController.store);
 
 routes.get('/providers', ProviderController.index);
 
 routes.get('/appointments', AppointmentController.index);
 routes.post('/appointments', AppointmentController.store);
+
 routes.get('/schedules', ScheduleController.index);
+
+routes.post('/files', auth, upload.single('file'), FileController.store);
 
 export default routes;

@@ -1,4 +1,5 @@
 backend/node_modules
 backend/.sequelizerc
-backend/database.text
+backend/database.txt
 backend/yarn.lock
+backend/yarn-error.log
