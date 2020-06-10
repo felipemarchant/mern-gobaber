@@ -31,6 +31,7 @@ routes.get('/schedules', ScheduleController.index);
 
 routes.get('/notifications', NotificationController.index);
 routes.put('/notifications/:id', NotificationController.update);
+routes.delete('/notifications/:id', NotificationController.delete);
 
 routes.post('/files', auth, upload.single('file'), FileController.store);
 
