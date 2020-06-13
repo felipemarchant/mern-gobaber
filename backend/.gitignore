@@ -1,0 +1,6 @@
+node_modules
+.sequelizerc
+database.txt
+yarn.lock
+yarn-error.log
+.env
