@@ -3,3 +3,4 @@ backend/.sequelizerc
 backend/database.txt
 backend/yarn.lock
 backend/yarn-error.log
+backend/.env
