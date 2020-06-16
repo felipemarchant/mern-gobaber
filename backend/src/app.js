@@ -3,6 +3,7 @@ import express from 'express';
 import Youch from 'youch';
 import 'express-async-errors';
 import routes  from './routes';
+import cors from 'cors';
 import './database';
 import { resolve } from 'path';
 
@@ -16,6 +17,7 @@ class App {
 
     middleware() {
         this.server.use(express.json());
+        this.server.use(cors());
         this.server.use('/files', express.static(resolve(__dirname, '..', 'tmp', 'uploads')));
     }
 
