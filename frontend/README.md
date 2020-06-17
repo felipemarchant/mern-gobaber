@@ -1,68 +1,78 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Aula 05 - Rotas privadas
 
-In the project directory, you can run:
+Do jeito que está a aplicação, podemos acessar todas as rotas mesmo não estando logado, agora o que iremos fazer é controlar as rotas, verificando se o usuário está logado ou não.
 
-### `yarn start`
+Vamos criar um arquivo chamado `Route.js` que vai ser um wrapper do Route do react-router-dom:
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Vamos criar uma função RouteWrapper que recebe as props do componente que irá utilizar esse componente RouteWrapper, ele recebe a prop Component, isPrivate e o restante que tiver será passada no ...rest.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Se o usuário não estiver auteticado e a rota for privada ele é redirecionado para o /.
 
-### `yarn test`
+Se ele estiver logado e a rota não é privada, ele vai para o dashboard, para as demais condições ele vai para Route com o seu respectivo componente.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Route, Redirect } from 'react-router-dom';
 
-### `yarn build`
+export default function RouteWrapper({
+  component: Component,
+  isPrivate = false,
+  ...rest
+}) {
+  const signed = true;
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  if (!signed && isPrivate) {
+    return <Redirect to="/" />;
+  }
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+  if (signed && !isPrivate) {
+    return <Redirect to="/dashboard" />;
+  }
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  return <Route {...rest} component={Component} />;
+}
 
-### `yarn eject`
+RouteWrapper.propTypes = {
+  isPrivate: PropTypes.bool,
+  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
+    .isRequired,
+};
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+RouteWrapper.defaultProps = {
+  isPrivate: false,
+};
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+E no arquivo index.js da pasta routes eu salvo uso esse componente em vez de usar o Route do react-router-dom:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+import React from 'react';
+import { Switch } from 'react-router-dom';
+import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
+import Dashboard from '../pages/Dashboard';
+import Profile from '../pages/Profile';
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+import Route from './Route';
 
-## Learn More
+export default function Routes() {
+  return (
+    <Switch>
+      <Route path="/" exact component={SignIn} />
+      <Route path="/register" component={SignUp} />
+      <Route path="/dashboard" component={Dashboard} isPrivate />
+      <Route path="/profile" component={Profile} isPrivate />
+    </Switch>
+  );
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Pronto, só testar!
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+Código: [https://github.com/tgmarinho/gobarber-api/tree/aula-05-rotas-privadas](https://github.com/tgmarinho/gobarber-api/tree/aula-05-rotas-privadas)
 
-### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
